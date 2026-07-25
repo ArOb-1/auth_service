@@ -192,25 +192,28 @@ Authorization: Bearer <access_token>
 | PATCH | `/users/me/update/` | Обновить профиль | Auth |
 | DELETE | `/users/me/delete/` | Мягкое удаление | Auth |
 
-### Управление политиками (только admin)
-
-| Метод  | URL                      | Описание             | Доступ |
-|--------|--------------------------|----------------------|--------|
-| GET | `/admin/policies/` | Список всех политик | Admin |
-| POST | `/admin/policies/` | Создать политику | Admin |
-| DELETE | `/admin/policies/<id>/` | Удалить политику | Admin |
-
 ### Бизнес-объекты
 
-| Метод  | URL               | Описание            | Доступ           |
-|--------|-------------------|---------------------|------------------|
+| Метод  | URL                                  | Описание               | Доступ           |
+|--------|--------------------------------------|------------------------|------------------|
 | GET | `/shops/` | Список магазинов | guest+ |
+| POST | `/shops/create/` | Создать магазин | manager+ |
+| GET | `/shops/<uuid>/` | Детали магазина | guest+ |
+| PATCH | `/shops/<uuid>/update/` | Обновить магазин | manager (own) |
+| DELETE | `/shops/<uuid>/delete/` | Удалить магазин | manager (own) |
 | GET | `/products/` | Список товаров | guest+ |
-| GET | `/orders/` | Мои заказы | user+ |
-| POST | `/orders/` | Создать заказ | user+ |
+| POST | `/products/create/` | Создать товар | manager+ |
+| GET | `/products/<uuid>/` | Детали товара | guest+ |
+| PATCH | `/products/<uuid>/update/` | Обновить товар | manager (own) |
+| DELETE | `/products/<uuid>/delete/` | Удалить товар | manager (own) |
+| GET | `/orders/` | Список заказов | user+ |
+| POST | `/orders/create/` | Создать заказ | user+ |
+| GET | `/orders/<uuid>/` | Детали заказа | user (own) |
+| PATCH | `/orders/<uuid>/status/` | Обновить статус заказа | manager (own) |
 | GET | `/reviews/` | Список отзывов | guest+ |
-| POST | `/reviews/` | Создать отзыв | user+ |
-| DELETE | `/reviews/<id>/` | Удалить отзыв | user (own)/admin |
+| POST | `/reviews/create/` | Написать отзыв | user+ |
+| GET | `/reviews/<uuid>/` | Детали отзыва | guest+ |
+| DELETE | `/reviews/<uuid>/delete/` | Удалить отзыв | user (own)/admin |
 
 ---
 
