@@ -59,23 +59,7 @@ docker compose up --build -d
 docker compose exec web python manage.py migrate
 ```
 
-### 5. Наполни БД тестовыми данными
-
-Тестовые пользователи описаны в `data/load_data.json`:
-
-```bash
-docker compose exec web python manage.py seed
-```
-
-После этого в БД появятся три готовых пользователя:
-
-| Email             | Пароль      | Роль    |
-|-------------------|-------------|---------|
-| admin@test.com | admin123 | admin |
-| manager@test.com | manager123 | manager |
-| user@test.com | user123 | user |
-
-### 6. Запусти тесты (опционально)
+### 5. Запусти тесты (опционально)
 
 ```bash
 source venv/bin/activate
