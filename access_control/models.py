@@ -1,9 +1,13 @@
 from django.db import models
+from .choices import (
+    Resource, Action, Scope, RoleName
+)
 
 
 class Role(models.Model):
     name = models.CharField(max_length=50,
-                            unique=True)
+                            unique=True,
+                            choices=RoleName.choices)
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -13,39 +17,22 @@ class Role(models.Model):
         db_table = 'roles'
 
 
-class BusinessElement(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = 'business_elements'
-
-
-class AccessRoleRule(models.Model):
+class RolePolicy(models.Model):
     role = models.ForeignKey(Role,
                              on_delete=models.CASCADE,
-                             related_name='rules')
-    element = models.ForeignKey(BusinessElement,
-                                on_delete=models.CASCADE,
-                                related_name='rules')
-
-    read_permission = models.BooleanField(default=False)
-    read_all_permission = models.BooleanField(default=False)
-
-    create_permission = models.BooleanField(default=False)
-
-    update_permission = models.BooleanField(default=False)
-    update_all_permission = models.BooleanField(default=False)
-
-    delete_permission = models.BooleanField(default=False)
-    delete_all_permission = models.BooleanField(default=False)
+                             related_name='policies')
+    resource = models.CharField(max_length=50,
+                                choices=Resource.choices)
+    action = models.CharField(max_length=20,
+                              choices=Action.choices)
+    scope = models.CharField(max_length=20,
+                             choices=Scope.choices)
 
     class Meta:
-        db_table = 'access_roles_rules'
-        unique_together = ('role', 'element')
-
-    def __str__(self):
-        return f'{self.role.name} → {self.element.name}'
+        db_table = 'role_policies'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['role', 'resource', 'action'],
+                name='unique_role_resource_action'
+            )
+        ]

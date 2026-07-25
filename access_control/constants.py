@@ -1,0 +1,20 @@
+ADMIN = 'admin'
+MANAGER = 'manager'
+USER = 'user'
+GUEST = 'guest'
+
+USERS = 'users'
+SHOPS = 'shops'
+PRODUCTS = 'products'
+ORDERS = 'orders'
+REVIEWS = 'reviews'
+
+READ = 'read'
+CREATE = 'create'
+UPDATE = 'update'
+DELETE = 'delete'
+
+ALL = 'all'
+OWN = 'own'
+OWN_SHOP = 'own_shop'
+PUBLISHED = 'published'

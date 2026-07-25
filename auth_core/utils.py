@@ -1,8 +1,10 @@
 import uuid
 import bcrypt
 import jwt
+import json
 
 from datetime import datetime, timedelta, timezone
+from django.http import JsonResponse
 from core.settings import JWT_SECRET
 
 
@@ -29,14 +31,29 @@ def generate_refresh_token(user_id: str) -> tuple[str, datetime]:
     expires_at = datetime.now(timezone.utc) + timedelta(days=7)
     payload = {
         'user_id': str(user_id),
-        'type':    'refresh',
-        'jti':     str(uuid.uuid4()),
-        'exp':     expires_at,
-        'iat':     datetime.now(timezone.utc),
+        'type': 'refresh',
+        'jti': str(uuid.uuid4()),
+        'exp': expires_at,
+        'iat': datetime.now(timezone.utc),
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
-    return token, expires_at
+    return token
 
 
 def decode_token(token: str) -> dict:
     return jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+
+
+def parse_body(request) -> dict:
+    try:
+        return json.loads(request.body)
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        raise ValueError('Invalid JSON body')
+
+
+def success(data: dict = None, status: int = 200) -> JsonResponse:
+    return JsonResponse(data or {}, status=status)
+
+
+def error(message: str, status: int = 400) -> JsonResponse:
+    return JsonResponse({'error': message}, status=status)
