@@ -112,19 +112,17 @@ Authorization: Bearer <access_token>
 
 ### Схема БД
 
+| **roles** | &nbsp; | **role_policies** |
+|-----------|:------:|-------------------|
+| id | ──────► | role_id (FK) |
+| name |  | resource |
+| description |  | action |
+|  |  | scope |
 
-
-roles                    role_policies  
-──────────────────       ──────────────────────────────────────  
-id           ──────────► role_id (FK)  
-name                     resource  
-description              action  
-                         scope  
-  
-users  
-──────────────────────────────────────────────────────────────  
-id (UUID)    email    password_hash    role_id (FK)  
-first_name   last_name   patronymic   is_active
+| **users** | | | |
+|-----------|---|---|---|
+| id (UUID) | email | password_hash | role_id (FK) |
+| first_name | last_name | patronymic | is_active |
 
 
 ### Как работает проверка прав
