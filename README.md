@@ -114,22 +114,18 @@ Authorization: Bearer <access_token>
 
 
 
+roles                    role_policies  
+──────────────────       ──────────────────────────────────────  
+id           ──────────► role_id (FK)  
+name                     resource  
+description              action  
+                         scope  
   
-| roles |  | role_policies |  
-| ----- | --- | ------------- |  
-| id | ───────► | role_id(FK) | resource | action | scope |  
-| name |  
-  
-│ description │  
-└─────────────┘  
-  
-  
-| users |  
-| --- |  
-| id (UUID) \| email \| password_hash \| role_id (FK) |  
-  
-│first_name │last_name │   patronymic   │      is_active       │  
-└───────────┴──────────┴────────────────┴──────────────────────┘
+users  
+──────────────────────────────────────────────────────────────  
+id (UUID)    email    password_hash    role_id (FK)  
+first_name   last_name   patronymic   is_active
+
 
 ### Как работает проверка прав
 
@@ -446,8 +442,6 @@ Reviews:
   
 Done. Service is ready for testing.
 
-
-> Повторный запуск безопасен — существующие объекты пропускаются (`skip`).
 
 ---
 
