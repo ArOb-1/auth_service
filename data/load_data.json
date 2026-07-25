@@ -1,0 +1,26 @@
+[
+  {
+    "email": "admin@test.com",
+    "password": "admin123",
+    "first_name": "Admin",
+    "last_name": "Adminov",
+    "patronymic": "Adminovich",
+    "role": "admin"
+  },
+  {
+    "email": "manager@test.com",
+    "password": "manager123",
+    "first_name": "Manager",
+    "last_name": "Managero",
+    "patronymic": "",
+    "role": "manager"
+  },
+  {
+    "email": "user@test.com",
+    "password": "user123",
+    "first_name": "Regular",
+    "last_name": "User",
+    "patronymic": "",
+    "role": "user"
+  }
+]

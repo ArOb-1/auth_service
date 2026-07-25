@@ -228,7 +228,6 @@ class TestReviewDelete:
         assert not Review.objects.filter(id=review.id).exists()
 
     def test_user_cannot_delete_other_user_review(self, client, user_2_headers, review):
-        # review принадлежит user_user, запрос от user_user_2
         res = client.delete(f'/reviews/{review.id}/delete/', **user_2_headers)
         assert res.status_code == 403
         assert Review.objects.filter(id=review.id).exists()

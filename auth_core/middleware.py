@@ -32,6 +32,6 @@ class AuthMiddleware:
             except jwt.InvalidTokenError:
                 raise TokenInvalid()
             except User.DoesNotExist:
-                raise UserNotFound()
+                pass
 
         return self.get_response(request)

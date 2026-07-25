@@ -57,6 +57,12 @@ def guest_user(db, create_roles):
     return _make_user(RoleName.GUEST, 'guest@test.com')
 
 
+@pytest.fixture
+def access_token(regular_user):
+    return generate_access_token(regular_user.id,
+                                 regular_user.role.name)
+
+
 def _auth_headers(user):
     token = generate_access_token(user_id=str(user.id), role=user.role.name)
     return {'HTTP_AUTHORIZATION': f'Bearer {token}'}

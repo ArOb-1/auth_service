@@ -76,6 +76,9 @@ def login(request):
     except User.DoesNotExist:
         return error('User not found', status=401)
 
+    if not user.is_active:
+        return error('Account is deactivated', status=401)
+
     if not check_password(password, user.password_hash):
         return error('Invalid password', status=401)
 
