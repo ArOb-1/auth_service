@@ -1,4 +1,4 @@
-# 🔐 Auth Service
+# Auth Service
 
 Бэкенд-сервис собственной системы аутентификации и авторизации.  
 Реализован на **Django** без использования встроенных механизмов
@@ -7,7 +7,7 @@
 
 ---
 
-## 🛠 Стек технологий
+## Стек технологий
 
 | Компонент     | Технология              |
 |---------------|-------------------------|
@@ -21,12 +21,12 @@
 
 ---
 
-## 🚀 Запуск локально
+## Запуск локально
 
 ### 1. Клонируй репозиторий
 
 ```bash
-git clone https://github.com/your-username/auth_service.git
+git clone https://github.com/ArOb-1/auth_service
 cd auth_service
 ```
 
@@ -50,7 +50,7 @@ JWT_REFRESH_EXPIRE_DAYS=7
 ### 3. Подними контейнеры
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
 ### 4. Примени миграции
@@ -86,7 +86,7 @@ pytest -v --tb=short
 
 ---
 
-## 🏗 Архитектура
+## Архитектура
 
 ### Структура приложения
 
@@ -104,7 +104,7 @@ auth_service/
 
 ---
 
-## 🔑 Аутентификация
+## Аутентификация
 
 После успешного `login` сервер возвращает два JWT-токена:
 
@@ -124,7 +124,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 🛡 Система прав доступа
+## Система прав доступа
 
 ### Схема БД
 
@@ -133,18 +133,19 @@ Authorization: Bearer <access_token>
   
 | roles |  | role_policies |  
 | ----- | --- | ------------- |  
-| id | ──────► | role_id (FK) | resource | action | scope |  
-| name |  |  |  |  |  |  
+| id | ───────► | role_id(FK) | resource | action | scope |  
+| name |  
   
+│ description │  
+└─────────────┘  
   
   
 | users |  
 | --- |  
 | id (UUID) \| email \| password_hash \| role_id (FK) |  
   
-│first_name│last_name │  patronymic   │    is_active     │  
-└──────────┴──────────┴───────────────┴─────────────────┘
-
+│first_name │last_name │   patronymic   │      is_active       │  
+└───────────┴──────────┴────────────────┴──────────────────────┘
 
 ### Как работает проверка прав
 
@@ -159,9 +160,9 @@ Authorization: Bearer <access_token>
   → AuthMiddleware       — кто ты? → request.user  
   → @require_permission  — что хочешь сделать?  
       ищет (role, resource, action) в role_policies  
-          ✅ найдено → request.scope = scope → выполняем view → 200  
-          ❌ не найдено → 403 Forbidden  
-          ❌ user is None → 401 Unauthorized
+          найдено → request.scope = scope → выполняем view → 200  
+          не найдено → 403 Forbidden  
+          user is None → 401 Unauthorized
 
 
 ### Роли
@@ -194,7 +195,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 📡 API эндпоинты
+## API эндпоинты
 
 ### Аутентификация
 
@@ -221,7 +222,7 @@ Authorization: Bearer <access_token>
 | POST | `/admin/policies/` | Создать политику | Admin |
 | DELETE | `/admin/policies/<id>/` | Удалить политику | Admin |
 
-### Бизнес-объекты (Mock)
+### Бизнес-объекты
 
 | Метод  | URL               | Описание            | Доступ           |
 |--------|-------------------|---------------------|------------------|
@@ -235,7 +236,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 📋 Примеры запросов и ответов
+## Примеры запросов и ответов
 
 ### Регистрация
 
@@ -395,7 +396,7 @@ curl http://localhost:8000/admin/policies/ \
 
 ---
 
-### Бизнес-объекты (Mock)
+### Бизнес-объекты
 
 ```bash
 curl http://localhost:8000/shops/ \
@@ -411,7 +412,7 @@ curl http://localhost:8000/shops/ \
 
 ---
 
-## ✅ Как проверить работоспособность сервиса
+## Как проверить работоспособность сервиса
 
 ### Способ 1 — Автотесты
 
@@ -425,64 +426,146 @@ pytest -v --tb=short
 
 ---
 
-### Способ 2 — Вручную через curl / Postman
+## Способ 2 — Тестовые данные
 
-**Шаг 1.** Залогинься тестовым пользователем:
+Все тестовые данные описаны в `data/load_data.json`.  
+Команда создаёт пользователей, магазин, товары, заказы и отзывы:
+
+```bash
+docker compose exec web python manage.py seed
+```
+
+Вывод:
+
+
+
+Users:  
+   created admin@test.com    [admin]  
+   created manager@test.com  [manager]  
+   created user@test.com     [user]  
+  
+Shops:  
+   created TechShop  (owner: manager@test.com)  
+  
+Products:  
+   created Ноутбук Pro          [published]  99999.00 ₽  
+   created Беспроводная мышь    [published]   1999.00 ₽  
+   created Механическая клавиатура [draft]    7500.00 ₽  
+  
+Orders:  
+   created user@test.com → Ноутбук Pro        x1  [pending]  
+   created user@test.com → Беспроводная мышь  x2  [completed]  
+  
+Reviews:  
+   created user@test.com → Ноутбук Pro       ⭐⭐⭐⭐⭐  
+   created user@test.com → Беспроводная мышь ⭐⭐⭐⭐  
+  
+Done. Service is ready for testing.
+
+
+> Повторный запуск безопасен — существующие объекты пропускаются (`skip`).
+
+---
+
+## Демонстрация системы прав
+
+Получи токен нужного пользователя:
+
 ```bash
 curl -X POST http://localhost:8000/auth/login/ \
   -H "Content-Type: application/json" \
   -d '{"email": "user@test.com", "password": "user123"}'
 ```
-Скопируй `access_token`.
 
-**Шаг 2.** Запроси свой профиль:
-```bash
-curl http://localhost:8000/users/me/ \
-  -H "Authorization: Bearer <access_token>"
-```
-→ `200 OK` с данными профиля.
-
-**Шаг 3.** Попробуй получить admin-политики с user-токеном:
-```bash
-curl http://localhost:8000/admin/policies/ \
-  -H "Authorization: Bearer <access_token>"
-```
-→ `403 Forbidden`.
-
-**Шаг 4.** Залогинься как admin и повтори:
-```bash
-curl -X POST http://localhost:8000/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{"email": "admin@test.com", "password": "admin123"}'
-
-curl http://localhost:8000/admin/policies/ \
-  -H "Authorization: Bearer <admin_token>"
-```
-→ `200 OK` со списком политик.
-
-**Шаг 5.** Удали user-аккаунт и убедись что токен инвалидируется:
-```bash
-curl -X DELETE http://localhost:8000/users/me/delete/ \
-  -H "Authorization: Bearer <user_token>"
-
-curl http://localhost:8000/users/me/ \
-  -H "Authorization: Bearer <user_token>"
-```
-→ `401 Unauthorized`.
+Используй `access_token` в заголовке `Authorization: Bearer <token>`.
 
 ---
 
-### Способ 3 — Проверить БД напрямую
+### user@test.com — обычный пользователь
 
 ```bash
-docker compose exec db psql -U postgres -d auth_db
+# 200 — свой профиль
+GET /users/me/
 
--- Пользователи
-SELECT id, email, is_active, role_id FROM users;
+# 200 — список магазинов (публичное)
+GET /shops/
 
--- Политики доступа
-SELECT r.name AS role, rp.resource, rp.action, rp.scope
-FROM role_policies rp
-JOIN roles r ON r.id = rp.role_id
-ORDER BY r.name, rp.resource;
+# 200 — только опубликованные товары (draft не видит)
+GET /products/
+# → [Ноутбук Pro, Беспроводная мышь]  (клавиатура не попадёт — draft)
+
+# 200 — только свои заказы
+GET /orders/
+# → [заказ на ноутбук, заказ на мышь]
+
+# 200 — все отзывы
+GET /reviews/
+
+# 201 — создать заказ
+POST /orders/
+
+# 201 — написать отзыв
+POST /reviews/
+
+# 403 — нет доступа к политикам
+GET /admin/policies/
+```
+
+---
+
+### manager@test.com — менеджер
+
+```bash
+# 200 — список магазинов
+GET /shops/
+
+# 201 — создать магазин
+POST /shops/
+
+# 200 — товары своего магазина (включая draft)
+GET /products/
+# → [Ноутбук Pro, Беспроводная мышь, Механическая клавиатура]
+
+# 201 — добавить товар в свой магазин
+POST /products/
+
+# 200 — заказы своего магазина
+GET /orders/
+
+# 403 — нет доступа к политикам
+GET /admin/policies/
+```
+
+---
+
+### admin@test.com — администратор
+
+```bash
+# 200 — все политики доступа
+GET /admin/policies/
+
+# 201 — добавить новую политику
+POST /admin/policies/
+# Body: {"role": "user", "resource": "shops", "action": "create", "scope": "own"}
+
+# 204 — удалить политику
+DELETE /admin/policies/<id>/
+
+# Полный доступ ко всем остальным ресурсам
+```
+
+---
+
+### Инвалидация токена после удаления аккаунта
+
+```bash
+# 1. Логинимся
+POST /auth/login/  {"email": "user@test.com", "password": "user123"}
+# → сохраняем access_token
+
+# 2. Удаляем аккаунт (мягкое — is_active=False)
+DELETE /users/me/delete/  # → 200
+
+# 3. Старый токен больше не работает
+GET /users/me/  # → 401 Unauthorized
 ```

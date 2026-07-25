@@ -1,26 +1,86 @@
-[
-  {
-    "email": "admin@test.com",
-    "password": "admin123",
-    "first_name": "Admin",
-    "last_name": "Adminov",
-    "patronymic": "Adminovich",
-    "role": "admin"
-  },
-  {
-    "email": "manager@test.com",
-    "password": "manager123",
-    "first_name": "Manager",
-    "last_name": "Managero",
-    "patronymic": "",
-    "role": "manager"
-  },
-  {
-    "email": "user@test.com",
-    "password": "user123",
-    "first_name": "Regular",
-    "last_name": "User",
-    "patronymic": "",
-    "role": "user"
-  }
-]
+{
+  "users": [
+    {
+      "email": "admin@test.com",
+      "password": "admin123",
+      "first_name": "Admin",
+      "last_name": "Adminov",
+      "patronymic": "Adminovich",
+      "role": "admin"
+    },
+    {
+      "email": "manager@test.com",
+      "password": "manager123",
+      "first_name": "Maxim",
+      "last_name": "Managerov",
+      "patronymic": "",
+      "role": "manager"
+    },
+    {
+      "email": "user@test.com",
+      "password": "user123",
+      "first_name": "Ivan",
+      "last_name": "Ivanov",
+      "patronymic": "Ivanovich",
+      "role": "user"
+    }
+  ],
+  "shops": [
+    {
+      "name": "TechShop",
+      "description": "Электроника и гаджеты",
+      "owner_email": "manager@test.com"
+    }
+  ],
+  "products": [
+    {
+      "name": "Ноутбук Pro",
+      "description": "Мощный ноутбук для работы и учёбы",
+      "price": "99999.00",
+      "shop_name": "TechShop",
+      "status": "published"
+    },
+    {
+      "name": "Беспроводная мышь",
+      "description": "Эргономичная мышь с тихим кликом",
+      "price": "1999.00",
+      "shop_name": "TechShop",
+      "status": "published"
+    },
+    {
+      "name": "Механическая клавиатура",
+      "description": "Ещё не готова к продаже",
+      "price": "7500.00",
+      "shop_name": "TechShop",
+      "status": "draft"
+    }
+  ],
+  "orders": [
+    {
+      "user_email": "user@test.com",
+      "product_name": "Ноутбук Pro",
+      "quantity": 1,
+      "status": "pending"
+    },
+    {
+      "user_email": "user@test.com",
+      "product_name": "Беспроводная мышь",
+      "quantity": 2,
+      "status": "completed"
+    }
+  ],
+  "reviews": [
+    {
+      "user_email": "user@test.com",
+      "product_name": "Ноутбук Pro",
+      "rating": 5,
+      "text": "Отличный ноутбук, очень доволен покупкой!"
+    },
+    {
+      "user_email": "user@test.com",
+      "product_name": "Беспроводная мышь",
+      "rating": 4,
+      "text": "Хорошая мышь, удобно лежит в руке."
+    }
+  ]
+}
